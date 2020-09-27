@@ -5,6 +5,8 @@
  */
 package com.mycompany.mojPackage;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +23,7 @@ public class GlavniProzor extends javax.swing.JFrame {
     public GlavniProzor() {
         initComponents();
 
+        // prozor bude full-screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
     }
@@ -164,11 +167,30 @@ public class GlavniProzor extends javax.swing.JFrame {
 
     private void dugmeZaKodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dugmeZaKodMouseClicked
         // TODO add your handling code here:
-        Object[] rezultatKodiranja = HafmanovoKodiranje.generisatiHuffmanStablo(poljeZaUnos.getText());
+        // postavljam da su textboxovi prazni
+        kodiraniSimboli.setText("");
+        kodiraniTekst.setText("");
+        dekodiraniTekst.setText("");
 
-        kodiraniSimboli.setText("Kodirani simboli su: " + rezultatKodiranja[0]);
-        kodiraniTekst.setText("Kodirani tekst je: " + rezultatKodiranja[1]);
-        dekodiraniTekst.setText("Dekodirani tekst je: " + rezultatKodiranja[2]);
+        /* 
+        racunam koliko simbola ima, ako ima samo jedan simbol prijavljujem 
+        error korisniku da mora imati bar dva simbolja
+         */
+        Map<Character, Integer> frekvencijeZnaka = new HashMap<>();
+
+        for (char znak : poljeZaUnos.getText().toCharArray()) {
+            frekvencijeZnaka.put(znak, frekvencijeZnaka.getOrDefault(znak, 0) + 1);
+        }
+        if (frekvencijeZnaka.size() == 1) {
+            JOptionPane.showMessageDialog(null, "Poruka mora imati više od jednog simbola!");
+        } else {
+            // poziva se klasa za generisanje huffmanovog koda na osnovu unetog teksta
+            Object[] rezultatKodiranja = HafmanovoKodiranje.generisatiHuffmanStablo(poljeZaUnos.getText());
+
+            kodiraniSimboli.setText("Kodirani simboli su: " + rezultatKodiranja[0]);
+            kodiraniTekst.setText("Kodirani tekst je: " + rezultatKodiranja[1]);
+            dekodiraniTekst.setText("Dekodirani tekst je: " + rezultatKodiranja[2]);
+        }
     }//GEN-LAST:event_dugmeZaKodMouseClicked
 
     /**
